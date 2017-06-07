@@ -354,7 +354,7 @@ class Py3:
                 post = unit[1:]
                 si = len(unit) > 1 and unit[1] != 'i'
                 if si:
-                    post = post[1:]
+                    post = post.lstrip('i')
                 auto = False
             else:
                 index = 0
@@ -363,6 +363,19 @@ class Py3:
             size = DECIMAL_SIZE
         else:
             size = BINARY_SIZE
+
+        if '/' in post:
+            sep = '/'
+        elif 'p' in post[1:]:
+            sep='p'
+
+        if post.split(sep)[0].startswith('b'):
+            value *= 8
+
+        if post.split(sep)[-1].startswith('m'):
+            value /= 60
+        if post.split(sep)[-1].startswith('h'):
+            value /= 3600
 
         if auto:
             # we will try to use an appropriate prefix
